@@ -1,0 +1,21 @@
+name: Build APK
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # 최신 버전 사용
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build with Buildozer
+        uses: ArtemSerebrenninkov/buildozer-action@v1
+        with:
+          command: buildozer android debug
+          # 저장소에 buildozer.spec이 없으면 자동으로 생성해서 빌드해주는 옵션입니다.
+          repository_read_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: my-exam-app
+          path: bin/*.apk
